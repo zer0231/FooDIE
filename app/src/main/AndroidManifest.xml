@@ -12,27 +12,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectVI">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
+
         <activity
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
+
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+
+        </activity>
+
+        <activity android:name=".LoginActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>
