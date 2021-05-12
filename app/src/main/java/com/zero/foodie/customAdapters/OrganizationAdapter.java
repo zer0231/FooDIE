@@ -1,4 +1,4 @@
-package com.zero.foodie;
+package com.zero.foodie.customAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.zero.foodie.R;
+import com.zero.foodie.model.OrganizationDetail;
 
 import java.util.ArrayList;
 

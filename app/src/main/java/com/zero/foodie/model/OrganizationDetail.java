@@ -1,4 +1,4 @@
-package com.zero.foodie;
+package com.zero.foodie.model;
 
 public class OrganizationDetail {
     String id;
