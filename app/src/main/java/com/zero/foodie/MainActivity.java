@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
+    private SharedPreferenceHandler sharedPreferenceHandler;
     private boolean loggedIn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +34,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         drawer =findViewById(R.id.draw_layout);
         navigationView = findViewById(R.id.nav_view);
+        sharedPreferenceHandler = new SharedPreferenceHandler(this);
+        loggedIn= false;
+       // String imageUrl = "https://e7.pngegg.com/pngimages/246/366/png-clipart-computer-icons-avatar-user-profile-man-avatars-logo-monochrome.png";
+        Toast.makeText(this, sharedPreferenceHandler.getUser(), Toast.LENGTH_SHORT).show();
 
-        String imageUrl = "https://e7.pngegg.com/pngimages/246/366/png-clipart-computer-icons-avatar-user-profile-man-avatars-logo-monochrome.png";
-        loggedIn = true;
+
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close)
         {
@@ -62,22 +66,37 @@ public class MainActivity extends AppCompatActivity {
 });
 
 
-         Glide.with(this).load(imageUrl).fitCenter().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(profileButton);
+        // Glide.with(this).load(imageUrl).fitCenter().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(profileButton);
 
 
         profileButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i;
-           if(loggedIn)
+            if(!sharedPreferenceHandler.getUser().equals(""))
+            {
+                loggedIn = true;
+            }
+            else
+            {
+                loggedIn = false;
+            }
+            Toast.makeText(MainActivity.this, new SharedPreferenceHandler(MainActivity.this).getUser(), Toast.LENGTH_SHORT).show();
+           try {
+               Intent i;
+               if(loggedIn)
+               {
+                   i = new Intent(MainActivity.this,ProfileActivity.class);
+               }
+               else
+               {
+                   i = new Intent(MainActivity.this,LoginActivity.class);
+               }
+               startActivity(i);
+           }catch (Exception ex)
            {
-               i = new Intent(MainActivity.this,ProfileActivity.class);
+               Toast.makeText(MainActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
            }
-           else
-           {
-              i = new Intent(MainActivity.this,LoginActivity.class);
-           }
-           startActivity(i);
+
         }
     });
 
@@ -86,9 +105,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId())
                 {
-                    case R.id.nav_profile:
+                    case R.id.nav_home:
                         Toast.makeText(MainActivity.this, "Profile is selected", Toast.LENGTH_SHORT).show();
-                break;
+                    break;
+
+                    case R.id.nav_Recipe:
+                        Toast.makeText(MainActivity.this, "Recipie is selected", Toast.LENGTH_SHORT).show();
+                    break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
@@ -105,15 +128,6 @@ public class MainActivity extends AppCompatActivity {
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-       if(loggedIn)
-       {
-           loggedIn = false;
-           Toast.makeText(this, "False", Toast.LENGTH_SHORT).show();
-       }
-       else
-       {
-           loggedIn = true;
-           Toast.makeText(this, "True", Toast.LENGTH_SHORT).show();
-       }
+
     }
 }
