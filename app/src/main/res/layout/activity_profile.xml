@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
+
     <Button
+        android:id="@+id/profileLogoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="log out"
-        android:id="@+id/profileLogoutBtn"/>
+        android:text="log out" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
         android:id="@+id/profileTxt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="THIS IS THE PROFILE OF THE USER"/>
+        android:layout_centerInParent="true"
+        android:text="THIS IS THE PROFILE OF THE USER" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true" />
 
 </RelativeLayout>
