@@ -1,42 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/organizationPoster"
-                android:scaleType="fitXY"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:src="@drawable/sponge" />
+                android:layout_height="194dp"
+                android:id="@+id/orgPoster"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sponge"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/organizationName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sponge"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/organizationAddress"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sponge"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:id="@+id/orgName"
+                    android:layout_marginTop="8dp"
+                    android:text="THIS IS AWESOME"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    android:id="@+id/orgAddress"
+                    android:layout_marginTop="8dp"
+                    android:text="THIS IS AWESOME"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:id="@+id/orgVisit"
+                    android:text="Visit"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:text="Contact"
+                    android:id="@+id/orgContact"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

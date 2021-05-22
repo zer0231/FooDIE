@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.zero.foodie.R;
 import com.zero.foodie.model.OrganizationDetail;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapter.OrganizationHolder> {
     private ArrayList<OrganizationDetail> organizationDetails;
@@ -36,15 +39,18 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     @Override
     public void onBindViewHolder(@NonNull OrganizationHolder holder, int position) {
         OrganizationDetail currentItem = organizationDetails.get(position);
-        String id = currentItem.getId();
-        String name = currentItem.getName();
-        String image_url = currentItem.getImage_url();
-        String address = currentItem.getAddress();
 
-        //Here we set to the view in layout
-        Glide.with(context).load(image_url).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
-        holder.name.setText(name);
-        holder.address.setText(address);
+//        Here we set to the view in layout
+        Glide.with(context).load(currentItem.getOrgImageLink()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
+        holder.name.setText(currentItem.getOrgName());
+        holder.address.setText(currentItem.getOrgAddress());
+        holder.visit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, currentItem.getProducts().toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override
@@ -55,12 +61,15 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     public class OrganizationHolder extends RecyclerView.ViewHolder {
         //Here we initialize view
         public TextView name,address;
+        public Button visit,contatct;
         public ImageView poster;
         public OrganizationHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.organizationName);
-            address = itemView.findViewById(R.id.organizationAddress);
-            poster = itemView.findViewById(R.id.organizationPoster);
+            name = itemView.findViewById(R.id.orgName);
+            address = itemView.findViewById(R.id.orgAddress);
+            poster = itemView.findViewById(R.id.orgPoster);
+            visit = itemView.findViewById(R.id.orgVisit);
+            contatct = itemView.findViewById(R.id.orgContact);
         }
     }
 }

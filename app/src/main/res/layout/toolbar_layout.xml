@@ -1,4 +1,5 @@
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
@@ -7,7 +8,10 @@
     android:elevation="4dp"
     android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
+<androidx.appcompat.widget.SearchView
+    android:layout_width="match_parent"
+    android:id="@+id/searchBar"
+    android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/profile_button"
