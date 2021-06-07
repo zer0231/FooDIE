@@ -1,30 +1,30 @@
 package com.zero.foodie.customAdapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.zero.foodie.FoodActivity;
 import com.zero.foodie.R;
 import com.zero.foodie.model.OrganizationDetail;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapter.OrganizationHolder> {
     private ArrayList<OrganizationDetail> organizationDetails;
     private Context context;
 
-    public OrganizationAdapter(Context context,ArrayList<OrganizationDetail> organizationDetails)
+    public OrganizationAdapter(Context context, ArrayList<OrganizationDetail> organizationDetails)
     {
         this.context = context;
         this.organizationDetails = organizationDetails;
@@ -32,7 +32,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     @NonNull
     @Override
     public OrganizationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.organization_cardview,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_product,parent,false);
         return new OrganizationHolder(view);
     }
 
@@ -47,11 +47,21 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
         holder.visit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, currentItem.getProducts().toString(), Toast.LENGTH_SHORT).show();
+//               for(int i = 0;i < currentItem.getProducts().size();i++)
+//                {
+//                    if(currentItem.getOrgName() == currentItem.getProducts().get(i).getOrgId())
+//                            {
+//                                Toast.makeText(context,currentItem.getOrgName()+":"+ currentItem.getProducts().get(i).getProName(), Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                }
+                context.startActivity(new Intent(context, FoodActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
             }
         });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -65,11 +75,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
         public ImageView poster;
         public OrganizationHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.orgName);
-            address = itemView.findViewById(R.id.orgAddress);
-            poster = itemView.findViewById(R.id.orgPoster);
-            visit = itemView.findViewById(R.id.orgVisit);
-            contatct = itemView.findViewById(R.id.orgContact);
+            poster = itemView.findViewById(R.id.proPoster);
         }
     }
 }

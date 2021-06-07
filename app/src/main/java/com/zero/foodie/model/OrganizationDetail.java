@@ -1,5 +1,6 @@
 package com.zero.foodie.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,17 +10,17 @@ public class OrganizationDetail {
     String orgAddress;
     String orgPhoneNumber;
     String orgImageLink;
-    List<ProductDetail> products;
+    ArrayList<ProductDetail> products;
    // public HashMap<ProductDetail,String> getProducts() {
         //return products;
  //   }
 
 
-    public void setProducts(List<ProductDetail> products) {
+    public void setProducts(ArrayList<ProductDetail> products) {
         this.products = products;
     }
 
-    public List<ProductDetail> getProducts() {
+    public ArrayList<ProductDetail> getProducts() {
         return products;
     }
 

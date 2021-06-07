@@ -6,9 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-<!--    tools:openDrawer="start"> this code will show in design-->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,30 +15,29 @@
         <include layout="@layout/toolbar_layout" />
 
         <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/fragment_container"/>
+            android:layout_above="@id/bottomNavigation"
+            android:layout_below="@+id/toolbar" />
 
-<!--        <androidx.core.widget.ContentLoadingProgressBar-->
-<!--            android:id="@+id/loadingProgress"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:layout_centerInParent="true"-->
-<!--            android:foregroundTint="@color/teal_200"-->
-<!--            android:indeterminate="true"-->
-<!--            android:visibility="visible" />-->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_nav_menu" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        android:layout_gravity="start"
         app:menu="@menu/draw_menu" />
-
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

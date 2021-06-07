@@ -8,21 +8,7 @@
     android:elevation="4dp"
     android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-<androidx.appcompat.widget.SearchView
-    android:layout_width="match_parent"
-    android:id="@+id/searchBar"
-    android:layout_height="wrap_content"/>
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/profile_button"
-        android:layout_width="75dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="right"
-        android:src="@drawable/ic_profile"
-        android:elevation="4dp"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
 
 
 </androidx.appcompat.widget.Toolbar>
