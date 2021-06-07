@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/favImage"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
+                android:src="@drawable/sponge"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
+                android:alpha="0.9"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/favName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/favPrice"
+                android:layout_alignTop="@+id/favImage"
+                android:padding="8dp"
+                android:text="Name"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/favPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:padding="5dp"
+                android:textColor="@android:color/black"
+                android:layout_above="@+id/relativeLayout2"
+                android:layout_alignStart="@+id/relativeLayout2"
+                android:layout_marginBottom="22dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/favImage"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/favImage"
+                android:id="@+id/relativeLayout2">
+
+                <Button
+                    android:id="@+id/removeFromFavourite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remove"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@android:color/white"
+                    android:textColor="#BB0000"
+                    android:layout_toEndOf="@+id/moveToCart" />
+
+                <Button
+                    android:id="@+id/moveToCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:textColor="#0000BB"
+                    android:padding="7dp"
+                    android:layout_alignParentTop="true"
+                    android:text="MOVE TO CART" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

@@ -1,9 +1,11 @@
 package com.zero.foodie.customAdapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.zero.foodie.FoodActivity;
 import com.zero.foodie.R;
 import com.zero.foodie.model.OrganizationDetail;
 
@@ -21,7 +24,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     private ArrayList<OrganizationDetail> organizationDetails;
     private Context context;
 
-    public OrganizationAdapter(Context context,ArrayList<OrganizationDetail> organizationDetails)
+    public OrganizationAdapter(Context context, ArrayList<OrganizationDetail> organizationDetails)
     {
         this.context = context;
         this.organizationDetails = organizationDetails;
@@ -29,23 +32,36 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     @NonNull
     @Override
     public OrganizationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.organization_cardview,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_product,parent,false);
         return new OrganizationHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull OrganizationHolder holder, int position) {
         OrganizationDetail currentItem = organizationDetails.get(position);
-        String id = currentItem.getId();
-        String name = currentItem.getName();
-        String image_url = currentItem.getImage_url();
-        String address = currentItem.getAddress();
 
-        //Here we set to the view in layout
-        Glide.with(context).load(image_url).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
-        holder.name.setText(name);
-        holder.address.setText(address);
+//        Here we set to the view in layout
+        Glide.with(context).load(currentItem.getOrgImageLink()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
+        holder.name.setText(currentItem.getOrgName());
+        holder.address.setText(currentItem.getOrgAddress());
+        holder.visit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//               for(int i = 0;i < currentItem.getProducts().size();i++)
+//                {
+//                    if(currentItem.getOrgName() == currentItem.getProducts().get(i).getOrgId())
+//                            {
+//                                Toast.makeText(context,currentItem.getOrgName()+":"+ currentItem.getProducts().get(i).getProName(), Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                }
+                context.startActivity(new Intent(context, FoodActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+            }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -55,12 +71,11 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     public class OrganizationHolder extends RecyclerView.ViewHolder {
         //Here we initialize view
         public TextView name,address;
+        public Button visit,contatct;
         public ImageView poster;
         public OrganizationHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.organizationName);
-            address = itemView.findViewById(R.id.organizationAddress);
-            poster = itemView.findViewById(R.id.organizationPoster);
+            poster = itemView.findViewById(R.id.proPoster);
         }
     }
 }

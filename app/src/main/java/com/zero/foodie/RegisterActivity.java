@@ -8,16 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -112,9 +111,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (task.isSuccessful()) {
                     FirebaseUser fireUser = mAuth.getCurrentUser();
                     UserDetail googleUser = new UserDetail(fireUser.getDisplayName(), "", fireUser.getEmail(), "");
+                    googleUser.setUserAddress("Earth");
                     googleUser.setUserProfilePicture(fireUser.getPhotoUrl().toString());
                     FirebaseDatabase.getInstance().getReference().child("Users").child(fireUser.getUid()).setValue(googleUser);
-                    startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, ProfileActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     Toast.makeText(RegisterActivity.this, "Sign success", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(RegisterActivity.this, "Failed to sign in", Toast.LENGTH_SHORT).show();
@@ -195,8 +195,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(RegisterActivity.this, "Failed to Authenticate", Toast.LENGTH_SHORT).show();
                 }
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                registerProgressbar.setVisibility(View.INVISIBLE);
+            }
         });
 
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        startActivity(new Intent(RegisterActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//    }
 }

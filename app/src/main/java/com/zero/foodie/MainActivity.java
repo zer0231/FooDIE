@@ -1,7 +1,9 @@
 package com.zero.foodie;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,13 +12,33 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.zero.foodie.customAdapters.CartAdapter;
+import com.zero.foodie.customFragments.CartFragment;
+import com.zero.foodie.customFragments.FavouriteFragment;
+import com.zero.foodie.customFragments.HomeFragment;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,22 +46,33 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
-    private SharedPreferenceHandler sharedPreferenceHandler;
     private boolean loggedIn;
+    BottomNavigationView bottomNavigationView;
+
+    private FirebaseDatabase firebaseDatabase;
+    BadgeDrawable badgeDrawableCart;
+    private DatabaseReference databaseReference;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
+
 //        setting objects and other variables
-        profileButton = findViewById(R.id.profile_button);
+
+
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.draw_layout);
         navigationView = findViewById(R.id.nav_view);
-        sharedPreferenceHandler = new SharedPreferenceHandler(this);
-        loggedIn = false;
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+       loggedIn = false;
         // String imageUrl = "https://e7.pngegg.com/pngimages/246/366/png-clipart-computer-icons-avatar-user-profile-man-avatars-logo-monochrome.png";
+
+        //Setting HomeFragment as default
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this,"all")).commit();
+
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -51,63 +84,143 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+//                Toast.makeText(MainActivity.this, "Closing", Toast.LENGTH_SHORT).show();
             }
-        };//adding 3 line icon in toolbar for opening navigation drawer
+        };
 
-        drawer.addDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);//adding 3 line icon in toolbar for opening navigation drawer
         toggle.syncState();
+        cartBadge();
+
+
+        try {
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.nav_home:
+                            Toast.makeText(MainActivity.this, "Home is selected", Toast.LENGTH_SHORT).show();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this,"all")).commit();
+                            break;
+                        case R.id.nav_profile:
+                            profileShow();
+                            break;
+                        case R.id.nav_Recipe:
+                            Toast.makeText(MainActivity.this, "Recipe is selected", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(MainActivity.this, RecipeActivity.class));
+                            break;
+                        case R.id.nav_share:
+                            registrationToken();
+                            break;
+                    }
+                    drawer.closeDrawer(GravityCompat.START);
+                    return true;
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            ;
+        }
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.bottomFood:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this,"all")).commit();
+                        break;
+
+                    case R.id.bottomCart:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CartFragment(MainActivity.this)).commit();
+
+                        break;
+
+                    case R.id.bottomFav:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavouriteFragment(MainActivity.this)).commit();
+                        break;
+
+                    case R.id.bottomProfile:
+                        profileShow();
+                        break;
+                }
+                return true;
+            }
+        });
 
 
         // Glide.with(this).load(imageUrl).fitCenter().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(profileButton);
 
-        profileButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                return true;
-            }
-        });
 
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i;
-                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    i = new Intent(MainActivity.this, LoginActivity.class);
-                } else {
-                    i = new Intent(MainActivity.this, ProfileActivity.class);
-                }
-                startActivity(i);
+    }
 
-            }
-        });
+    private void profileShow() {
+        Intent i;
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            i = new Intent(MainActivity.this, LoginActivity.class);
+        } else {
+            i = new Intent(MainActivity.this, ProfileActivity.class);
+        }
+        startActivity(i);
+    }
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        Toast.makeText(MainActivity.this, "Home is selected", Toast.LENGTH_SHORT).show();
-                        break;
+    private void registrationToken() {
 
-                    case R.id.nav_Recipe:
-                        Toast.makeText(MainActivity.this, "Recipie is selected", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            // Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
 
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        //  String msg = getString(R.string.msg_token_fmt, token);
+                        //Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //  Log.d(TAG, token);
+                    }
+                });
     }
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
+        //super.onBackPressed();
         //check if navigation drawer is open or not and if yes then close
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-
         }
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tool_menu, menu);
+        return true;
+    }
+
+    public void cartBadge()
+    {
+        final int[] cartItem = {0};
+        DatabaseReference cartReference = FirebaseDatabase.getInstance().getReference();
+        cartReference.child("Users/"+ FirebaseAuth.getInstance().getCurrentUser().getUid() +"/cart/").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cartItem[0] = (int) snapshot.getChildrenCount();
+                badgeDrawableCart = bottomNavigationView.getOrCreateBadge(R.id.bottomCart);
+                badgeDrawableCart.setNumber(cartItem[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
 }

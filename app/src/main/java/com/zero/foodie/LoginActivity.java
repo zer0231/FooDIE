@@ -1,6 +1,7 @@
 package com.zero.foodie;
 
 import android.content.Intent;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -32,7 +33,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         login = findViewById(R.id.loginSimple);
         login.setOnClickListener(this);
-
         register = findViewById(R.id.loginRegister);
         register.setOnClickListener(this);
 
@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // there was an error
                         Toast.makeText(LoginActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
                     } else {
-                        Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     }

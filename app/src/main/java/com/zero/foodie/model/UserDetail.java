@@ -1,7 +1,7 @@
 package com.zero.foodie.model;
 
 public class UserDetail {
-    public String userId, userName, userAddress, userEmail, userPassword, userProfilePicture;
+    public String  userName, userAddress, userEmail, userPassword, userProfilePicture;
 
     public UserDetail(String userName, String userAddress, String userEmail, String userPassword) {
         this.userName = userName;
@@ -15,12 +15,15 @@ public class UserDetail {
         return userProfilePicture;
     }
 
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
     public void setUserProfilePicture(String userProfilePicture) {
         this.userProfilePicture = userProfilePicture;
     }
 
-    public String getUserId() {
-        return userId;
+    public UserDetail() {
     }
 
     public String getUserName() {
