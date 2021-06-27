@@ -1,7 +1,10 @@
 package com.zero.foodie.customFragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +37,11 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
     Context context;
     ProductAdapter productAdapter;
     RecyclerView recyclerView, circularRecyclerView;
-    ArrayList<ProductDetail> productList;
-    SearchView searchView;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
     CategoryAdapter categoryAdapter;
     String category;
 
@@ -51,21 +54,35 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View v = inflater.inflate(R.layout.fragment_home, parent, false);
-
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        String token = task.getResult();
+                        FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/notificationToken").setValue(token);
+                    }
+                });
+            }
+        });
         circularRecyclerView = v.findViewById(R.id.categoryRecyclerView);
         circularRecyclerView.setHasFixedSize(true);
         recyclerView = v.findViewById(R.id.orgRecycleView);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(null);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        editor = preferences.edit();
         LinearLayoutManager circularLinearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);
         circularRecyclerView.setLayoutManager(circularLinearLayoutManager);
         recyclerView.setLayoutManager(gridLayoutManager);
+
         getCategoryData();
         getData();
 //        registrationToken();
         return v;
     }
-
 
     public void getCategoryData() {
         ArrayList<String> names = new ArrayList<>();
@@ -76,13 +93,11 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 //                 dataSnapshot.child("name").getValue(String.class)
                     names.add(dataSnapshot.getKey());
-
                     try {
                         images.add(dataSnapshot.getValue().toString());
                     } catch (Exception e) {
                         images.add("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.373cI-NISN44rQmiYFt4gwHaHa%26pid%3DApi&f=1");
                     }
-
                 }
                 categoryAdapter = new CategoryAdapter(context, images, names, getFragmentManager());
                 circularRecyclerView.setAdapter(categoryAdapter);
@@ -90,11 +105,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, error.getMessage().trim(), Toast.LENGTH_SHORT).show();
 
             }
         });
-
-
     }
 
     @Override
@@ -111,56 +125,56 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    getData();
+                    try {
+                        getData();
+                    } catch (Exception e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    productAdapter.getFilter().filter(newText);
+                    try {
+                        productAdapter.getFilter().filter(newText);
+                    } catch (Exception e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-
                 // productAdapter.notifyDataSetChanged();
                 return true;
             }
         });
     }
 
-
     private void getData() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("products");
-
-        if (category == "all") {
-            ref.addValueEventListener(new ValueEventListener() {
+        if (category.equals("all")) {
+            ref.orderByChild("status").equalTo("available").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String data = "";
-
                     ArrayList<ProductDetail> productList = new ArrayList<ProductDetail>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         productList.add(new ProductDetail(dataSnapshot.child("name").getValue(String.class), dataSnapshot.child("imageLink").getValue(String.class), dataSnapshot.child("itemType").getValue(String.class), dataSnapshot.child("briefDescription").getValue(String.class), dataSnapshot.child("price").getValue(String.class), dataSnapshot.getKey()));
-                        //productList.clear();
                     }
-
                     productAdapter = new ProductAdapter(context, productList);
                     recyclerView.setAdapter(productAdapter);
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Toast.makeText(context, error.getMessage().trim(), Toast.LENGTH_SHORT).show();
                 }
             });
+            editor.putString("categoryHome", "homeSelected");
         } else {
-            Toast.makeText(context, "Not all", Toast.LENGTH_SHORT).show();
-            ref.orderByChild("itemType").equalTo(category).addValueEventListener(new ValueEventListener() {
+
+            ref.orderByChild("status").equalTo("available").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String data = "";
-
                     ArrayList<ProductDetail> productList = new ArrayList<ProductDetail>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        productList.add(new ProductDetail(dataSnapshot.child("name").getValue(String.class), dataSnapshot.child("imageLink").getValue(String.class), dataSnapshot.child("itemType").getValue(String.class), dataSnapshot.child("briefDescription").getValue(String.class), dataSnapshot.child("price").getValue(String.class), dataSnapshot.getKey()));
-                        //productList.clear();
+                        if (dataSnapshot.child("itemType").getValue(String.class).equals(category)) {
+                            productList.add(new ProductDetail(dataSnapshot.child("name").getValue(String.class), dataSnapshot.child("imageLink").getValue(String.class), dataSnapshot.child("itemType").getValue(String.class), dataSnapshot.child("briefDescription").getValue(String.class), dataSnapshot.child("price").getValue(String.class), dataSnapshot.getKey()));
+                        }//productList.clear();
                     }
-
                     productAdapter = new ProductAdapter(context, productList);
                     recyclerView.setAdapter(productAdapter);
                 }
@@ -170,8 +184,9 @@ public class HomeFragment extends Fragment {
 
                 }
             });
+            editor.putString("categoryHome", "categorySelected");
         }
-
+        editor.apply();
     }
 
     private String registrationToken() {

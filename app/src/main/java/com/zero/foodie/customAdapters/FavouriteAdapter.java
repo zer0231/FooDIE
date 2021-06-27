@@ -47,10 +47,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         FirebaseDatabase.getInstance().getReference("products/" + currentID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                temp = new CartModel(currentID, snapshot.child("name").getValue(String.class), 1, snapshot.child("imageLink").getValue(String.class), snapshot.child("price").getValue(String.class), snapshot.child("price").getValue(String.class));
+                temp = new CartModel(currentID, snapshot.child("name").getValue(String.class), 1, snapshot.child("imageLink").getValue(String.class), snapshot.child("price").getValue(String.class), snapshot.child("price").getValue(String.class),FirebaseAuth.getInstance().getCurrentUser().getUid());
                 holder.name.setText(snapshot.child("name").getValue(String.class));
                 holder.price.setText(snapshot.child("price").getValue(String.class));
-                Glide.with(context).load(snapshot.child("imageLink").getValue(String.class)).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
+                Glide.with(context).load(snapshot.child("imageLink").getValue(String.class)).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.temp_image).into(holder.poster);
             }
 
             @Override

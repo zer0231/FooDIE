@@ -1,14 +1,23 @@
 package com.zero.foodie.model;
 
 public class UserDetail {
-    public String  userName, userAddress, userEmail, userPassword, userProfilePicture;
+    public String userName, userAddress, userEmail, userPassword, userProfilePicture,userPhoneNumber;
 
-    public UserDetail(String userName, String userAddress, String userEmail, String userPassword) {
+    public String getUserPhoneNumber() {
+        return userPhoneNumber;
+    }
+
+    public void setUserPhoneNumber(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
+    }
+
+    public UserDetail(String userName, String userAddress, String userEmail, String userPassword, String userPhoneNumber) {
         this.userName = userName;
         this.userAddress = userAddress;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
         this.userProfilePicture = "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg";
+        this.userPhoneNumber = userPhoneNumber;
     }
 
     public String getUserProfilePicture() {

@@ -3,6 +3,7 @@ package com.zero.foodie;
 import android.content.Intent;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -95,6 +98,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // there was an error
                         Toast.makeText(LoginActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
                     } else {
+
+
+
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

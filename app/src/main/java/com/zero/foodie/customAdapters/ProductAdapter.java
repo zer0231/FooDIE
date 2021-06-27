@@ -1,7 +1,6 @@
 package com.zero.foodie.customAdapters;
 
 import android.content.Context;
-import android.graphics.drawable.VectorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zero.foodie.MainActivity;
@@ -32,7 +30,6 @@ import com.zero.foodie.model.CartModel;
 import com.zero.foodie.model.ProductDetail;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder> implements Filterable {
     private ArrayList<ProductDetail> productsList;
@@ -50,7 +47,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         View view = LayoutInflater.from(context).inflate(R.layout.card_product, parent, false);
         return new ProductHolder(view);
     }
-
 
 
     private Filter Searched_Filter = new Filter() {
@@ -71,6 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             results.values = filteredList;
             return results;
         }
+
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             productsList.clear();
@@ -92,15 +89,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         FirebaseDatabase.getInstance().getReference().child("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/favourites/" + currentItem.getProId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                {
-                    holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_24));
-                    currentItem.setFavourite(true);
+                if (snapshot.exists()) {
+                    try {
+                        currentItem.setFavourite(true);
+                        notifyItemChanged(position);
+                        holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_24_purple));
+                        currentItem.setFavourite(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        currentItem.setFavourite(false);
+                        notifyItemChanged(position);
+                        holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_24));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -108,40 +119,56 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    notifyItemChanged(position);
-                    currentItem.setInCart(true);
-                    holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_done_24));
+                    try {
+                        notifyItemChanged(position);
+                        currentItem.setInCart(true);
+                        holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_done_24));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    notifyItemChanged(position);
-                    currentItem.setInCart(false);
-                    holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_shopping_cart_24));
+                    try {
+                        notifyItemChanged(position);
+                        currentItem.setInCart(false);
+                        holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_shopping_cart_24));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        Glide.with(context).load(currentItem.getProImageLink()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
+        Glide.with(context.getApplicationContext()).load(currentItem.getProImageLink()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).placeholder(R.drawable.temp_image).into(holder.poster);
         holder.name.setText(currentItem.getProName());
-        holder.price.setText(currentItem.getProPrice());
+        holder.price.setText("Rs. "+currentItem.getProPrice());
         holder.addToFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentItem.isFavourite()) {
-                    FirebaseDatabase.getInstance().getReference().child("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/favourites/" + currentItem.getProId()).removeValue();
-                    holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_border_24));
-                   notifyItemChanged(position);
-                    currentItem.setFavourite(false);
-                }
-                else
-                {
-                    notifyItemChanged(position);
-                    FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/favourites/" + currentItem.getProId()).setValue("true");
-                    holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_24));
-                    currentItem.setFavourite(true);
+                    try {
+                        FirebaseDatabase.getInstance().getReference().child("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/favourites/" + currentItem.getProId()).removeValue();
+                        holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_24));
+                        notifyItemChanged(position);
+                        currentItem.setFavourite(false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        notifyItemChanged(position);
+                        FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/favourites/" + currentItem.getProId()).setValue("true");
+                        holder.addToFavourite.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_favorite_24_purple));
+                        currentItem.setFavourite(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
         });
@@ -151,23 +178,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             public void onClick(View v) {
                 if (!currentItem.isInCart()) {
                     try {
-                        FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/cart/" + currentItem.getProId()).setValue(new CartModel(currentItem.getProId(), currentItem.getProName(), 1, currentItem.getProImageLink(), currentItem.getProPrice(), currentItem.getProPrice()));
+                        FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/cart/" + currentItem.getProId()).setValue(new CartModel(currentItem.getProId(), currentItem.getProName(), 1, currentItem.getProImageLink(), currentItem.getProPrice(), currentItem.getProPrice(), FirebaseAuth.getInstance().getCurrentUser().getUid()));
+                        currentItem.setInCart(true);
+                        Toast.makeText(context, "Added from your cart" + currentItem.getProId(), Toast.LENGTH_SHORT).show();
+                        holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_done_24));
+
                     } catch (Exception e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    currentItem.setInCart(true);
-                    Toast.makeText(context, "Added from your cart" + currentItem.getProId(), Toast.LENGTH_SHORT).show();
-                    holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_done_24));
-                    ((MainActivity) context).cartBadge();
+
                 } else {
                     try {
                         FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/cart/" + currentItem.getProId()).removeValue();
+                        currentItem.setInCart(false);
+                        holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_shopping_cart_24));
+
                     } catch (Exception e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    currentItem.setInCart(false);
-                    holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_shopping_cart_24));
-                    ((MainActivity) context).cartBadge();
                 }
             }
         });

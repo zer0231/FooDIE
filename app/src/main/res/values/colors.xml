@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="pastelRed">#ff3d43</color>
+    <color name="Red">#ff0008</color>
+    <color name="pastelGreen">#56ff40</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="whiteTransparent">#96ffffff</color>
+    <color name="green">#197319</color>
+    <color name="darkGreen">#005A00</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="darkBlue">#001335</color>
+    <color name="greyTransparent">#3dffffff</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -8,4 +21,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+
+
+    <color name ="grey_lighten_5">#FAFAFA</color>
+    <color name ="grey_lighten_4">#f5f5f5</color>
+    <color name ="grey_lighten_3">#EEEEEE</color>
+    <color name ="grey_lighten_2">#E0E0E0</color>
+    <color name ="grey_lighten_1">#BDBDBD</color>
+    <color name ="grey">#9E9E9E</color>
+    <color name ="grey_darken_1">#757575</color>
+    <color name ="grey_darken_2">#616161</color>
+    <color name ="grey_darken_3">#424242</color>
+    <color name ="grey_darken_4">#212121</color>
+
 </resources>

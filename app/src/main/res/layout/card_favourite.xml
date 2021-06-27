@@ -20,7 +20,7 @@
                 android:id="@+id/favImage"
                 android:layout_width="150dp"
                 android:layout_height="170dp"
-                android:src="@drawable/sponge"
+                android:src="@drawable/temp_image"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="5dp"

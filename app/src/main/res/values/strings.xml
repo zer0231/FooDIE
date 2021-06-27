@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Food ie</string>
+
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -12,4 +12,13 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="msg_token_fmt">hello there</string>
+    <string name="MAP_API_KEY" translatable="false">AIzaSyBPxFcVHTI11PrNLq6fcWYtOVeOTy1w4I4</string>
+
+
+    <string name="app_name">Foodie</string>
+    <string name="background_image">background_image</string>
+    <string name="logo_text">Foodie</string>
+    <string name="app_quote"><i>Happy Eating !!!</i></string>
+    <string name="food_logo">food_logo</string>
+    <string name="get_started">Get Started</string>
 </resources>

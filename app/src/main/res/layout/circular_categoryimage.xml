@@ -10,10 +10,9 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="60dp"
         android:clickable="true"
-        app:border_color="#FFC105"
         app:border_width="3dp"
         android:layout_height="60dp"
-        android:src="@drawable/sponge"
+        android:src="@drawable/temp_image"
         android:id="@+id/circularCategory"/>
 
 </LinearLayout>

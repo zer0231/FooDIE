@@ -7,15 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zero.foodie.R;
 import com.zero.foodie.model.RecipeBrief;
@@ -47,14 +48,33 @@ public class RecipePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.recipe_cardview, container, false);
         ImageView recipeImage;
+        MaterialCardView cardView;
         FloatingActionButton floatingActionButton;
         TextView recipeTitle,recipeBriefDescription;
         recipeImage = view.findViewById(R.id.recipe_image);
         floatingActionButton = view.findViewById(R.id.viewRecipe);
         recipeTitle = view.findViewById(R.id.recipe_title);
         recipeBriefDescription = view.findViewById(R.id.recipe_briefDescription);
+        cardView = view.findViewById(R.id.recipe_cardView);
 
-        Glide.with(context).load(recipes.get(position).getImageURL()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(recipeImage);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Long Press to view full recipe", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                context.startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(recipes.get(position).getLink())));
+                return true;
+            }
+        });
+
+        Glide.with(context).load(recipes.get(position).getImageURL()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.temp_image).into(recipeImage);
         recipeTitle.setText(recipes.get(position).getName());
         recipeBriefDescription.setText(recipes.get(position).getBriefIntro());
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
