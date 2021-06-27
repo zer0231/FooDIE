@@ -1,8 +1,12 @@
 package com.zero.foodie;
 
 import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +42,7 @@ import com.zero.foodie.customFragments.CartFragment;
 import com.zero.foodie.customFragments.FavouriteFragment;
 import com.zero.foodie.customFragments.HomeFragment;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
         drawer = findViewById(R.id.draw_layout);
         navigationView = findViewById(R.id.nav_view);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
-       loggedIn = false;
+        loggedIn = false;
         // String imageUrl = "https://e7.pngegg.com/pngimages/246/366/png-clipart-computer-icons-avatar-user-profile-man-avatars-logo-monochrome.png";
-
+;
         //Setting HomeFragment as default
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this,"all")).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this, "all")).commit();
 
 
         setSupportActionBar(toolbar);
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     switch (item.getItemId()) {
                         case R.id.nav_home:
                             Toast.makeText(MainActivity.this, "Home is selected", Toast.LENGTH_SHORT).show();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this,"all")).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this, "all")).commit();
                             break;
                         case R.id.nav_profile:
                             profileShow();
@@ -110,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this, RecipeActivity.class));
                             break;
                         case R.id.nav_share:
-                            registrationToken();
+//                            registrationToken();
+                            startActivity(new Intent(MainActivity.this,FoodActivity.class));
+                            Toast.makeText(MainActivity.this, "Thankyou mf", Toast.LENGTH_SHORT).show();
                             break;
                     }
                     drawer.closeDrawer(GravityCompat.START);
@@ -127,11 +134,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.bottomFood:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this,"all")).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(MainActivity.this, "all")).commit();
                         break;
 
                     case R.id.bottomCart:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CartFragment(MainActivity.this)).commit();
+
+                        try {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CartFragment(MainActivity.this)).commit();
+                        } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
 
                         break;
 
@@ -174,15 +186,6 @@ public class MainActivity extends AppCompatActivity {
                             // Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-                        //  String msg = getString(R.string.msg_token_fmt, token);
-                        //Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-                        //  Log.d(TAG, token);
                     }
                 });
     }
@@ -203,11 +206,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void cartBadge()
-    {
+    public void cartBadge() {
         final int[] cartItem = {0};
         DatabaseReference cartReference = FirebaseDatabase.getInstance().getReference();
-        cartReference.child("Users/"+ FirebaseAuth.getInstance().getCurrentUser().getUid() +"/cart/").addValueEventListener(new ValueEventListener() {
+        cartReference.child("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/cart/").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 cartItem[0] = (int) snapshot.getChildrenCount();

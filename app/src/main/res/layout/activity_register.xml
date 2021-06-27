@@ -36,16 +36,26 @@
         android:layout_below="@+id/registerEmail"
         android:hint="Enter Password" />
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/registerPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/registerPassword"
+        android:inputType="numberDecimal"
+        android:hint="Enter Your Number" />
+
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerSimple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/registerPassword"
+        android:layout_below="@id/registerPhoneNumber"
         android:layout_centerHorizontal="true"
         android:text="Register" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerGoogle"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/registerSimple"

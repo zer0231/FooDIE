@@ -3,6 +3,7 @@ package com.zero.foodie;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.card.MaterialCardView;
 import com.zero.foodie.customAdapters.RecipePagerAdapter;
 import com.zero.foodie.model.RecipeBrief;
 
@@ -42,6 +44,8 @@ public class RecipeActivity extends AppCompatActivity {
 
 
         FillData(url);
+
+
 
 recipeSearch.setOnCloseListener(new SearchView.OnCloseListener() {
     @Override

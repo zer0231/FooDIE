@@ -26,7 +26,7 @@
                 android:layout_marginTop="3dp"
                 android:alpha="0.9"
                 android:scaleType="centerCrop"
-                android:src="@drawable/sponge" />
+                android:src="@drawable/temp_image" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/cartProductName"

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,24 +49,27 @@ public class FavouriteFragment extends Fragment {
     }
 
     private void getData() {
-        FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/favourites").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                favouriteProductId = new ArrayList<>();
-//                favouriteProductId.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                   favouriteProductId.add(dataSnapshot.getKey());
+        try {
+            FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/favourites").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    favouriteProductId = new ArrayList<>();
+    //                favouriteProductId.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        favouriteProductId.add(dataSnapshot.getKey());
+                    }
+                    //favouriteProductId.clear();
+                    favouriteAdapter = new FavouriteAdapter(context, favouriteProductId);
+                    recyclerView.setAdapter(favouriteAdapter);
                 }
-                //favouriteProductId.clear();
-                favouriteAdapter = new FavouriteAdapter(context, favouriteProductId);
-                recyclerView.setAdapter(favouriteAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

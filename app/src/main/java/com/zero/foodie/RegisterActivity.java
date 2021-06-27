@@ -28,7 +28,7 @@ import com.zero.foodie.model.UserDetail;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     int RC_SIGN_IN = 35;
-    private EditText nameEditTxt, addressEditTxt, emailEditTxt, passwordEditTxt;
+    private EditText nameEditTxt, addressEditTxt, emailEditTxt, passwordEditTxt,phoneEditTxt;
     private Button register, googleRegister;
     private ProgressBar registerProgressbar;
     private GoogleSignInClient mGoogleSignInClient;
@@ -110,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser fireUser = mAuth.getCurrentUser();
-                    UserDetail googleUser = new UserDetail(fireUser.getDisplayName(), "", fireUser.getEmail(), "");
+                    UserDetail googleUser = new UserDetail(fireUser.getDisplayName(), "", fireUser.getEmail(), "","");
                     googleUser.setUserAddress("Earth");
                     googleUser.setUserProfilePicture(fireUser.getPhotoUrl().toString());
                     FirebaseDatabase.getInstance().getReference().child("Users").child(fireUser.getUid()).setValue(googleUser);
@@ -124,18 +124,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void register() {
-        String name, address, email, password;
+        String name, address, email, password,phoneNumber;
         registerProgressbar = findViewById(R.id.registerProgressbar);
         registerProgressbar.setVisibility(View.VISIBLE);
         nameEditTxt = findViewById(R.id.registerFullName);
         addressEditTxt = findViewById(R.id.registerAddress);
         emailEditTxt = findViewById(R.id.registerEmail);
         passwordEditTxt = findViewById(R.id.registerPassword);
+        phoneEditTxt = findViewById(R.id.registerPhoneNumber);
 
         name = nameEditTxt.getText().toString().trim();
         address = addressEditTxt.getText().toString().trim();
         email = emailEditTxt.getText().toString().trim();
         password = passwordEditTxt.getText().toString().trim();
+        phoneNumber = phoneEditTxt.getText().toString().trim();
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailEditTxt.setError("The Email is invalid");
@@ -173,7 +175,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        UserDetail user = new UserDetail(name, address, email, password);
+        UserDetail user = new UserDetail(name, address, email, password,phoneNumber);
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

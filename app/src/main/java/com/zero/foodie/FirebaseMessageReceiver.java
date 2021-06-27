@@ -3,10 +3,11 @@ package com.zero.foodie;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
@@ -14,8 +15,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-public class FirebaseMessageReceiver extends FirebaseMessagingService
-{
+public class FirebaseMessageReceiver extends FirebaseMessagingService {
     public void
     onMessageReceived(RemoteMessage remoteMessage) {
         // First case when notifications are received via
@@ -59,48 +59,33 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService
     // Method to display the notifications
     public void showNotification(String title,
                                  String message) {
-        // Pass the intent to switch to the MainActivity
+
         Intent intent
                 = new Intent(this, MainActivity.class);
         // Assign channel ID
         String channel_id = "notification_channel";
-        // Here FLAG_ACTIVITY_CLEAR_TOP flag is set to clear
-        // the activities present in the activity stack,
-        // on the top of the Activity that is to be launched
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // Pass the intent to PendingIntent to start the
-        // next Activity
+
         PendingIntent pendingIntent
                 = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        // Create a Builder object using NotificationCompat
-        // class. This will allow control over all the flags
         NotificationCompat.Builder builder
                 = new NotificationCompat
                 .Builder(getApplicationContext(),
                 channel_id)
                 .setSmallIcon(R.drawable.logo)
                 .setAutoCancel(true)
-                .setVibrate(new long[]{1000, 1000, 1000,
-                        1000, 1000})
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent);
 
-        // A customized design for the notification can be
-        // set only for Android versions 4.1 and above. Thus
-        // condition for the same is checked here.
 
-            builder = builder.setContent(
-                    getCustomDesign(title, message));
-        // If Android Version is lower than Jelly Beans,
-        // customized layout cannot be used and thus the
-        // layout is set as follows
 
-        // Create an object of NotificationManager class to
-        // notify the
-        // user of events that happen in the background.
+        builder = builder.setContent(
+                getCustomDesign(title, message));
+
         NotificationManager notificationManager
                 = (NotificationManager) getSystemService(
                 Context.NOTIFICATION_SERVICE);
@@ -113,6 +98,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService
                     NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(
                     notificationChannel);
+            final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
         }
 
         notificationManager.notify(0, builder.build());

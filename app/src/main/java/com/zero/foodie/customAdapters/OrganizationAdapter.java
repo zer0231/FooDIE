@@ -41,7 +41,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
         OrganizationDetail currentItem = organizationDetails.get(position);
 
 //        Here we set to the view in layout
-        Glide.with(context).load(currentItem.getOrgImageLink()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.sponge).into(holder.poster);
+        Glide.with(context).load(currentItem.getOrgImageLink()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.temp_image).into(holder.poster);
         holder.name.setText(currentItem.getOrgName());
         holder.address.setText(currentItem.getOrgAddress());
         holder.visit.setOnClickListener(new View.OnClickListener() {

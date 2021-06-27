@@ -1,66 +1,238 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!-- I am groot-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    android:background="#ECECEC">
 
-    <Button
-        android:id="@+id/profileLogoutBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:text="log out" />
-
-    <RelativeLayout
-        android:id="@+id/userLayout"
+    <!-- All those newbie belongs to me i am here so that you can view them all even you got small screen-->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/sponge" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/profileName"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <!-- I am parent of grand parent and i am in vertical aka list-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/profileImage"
-            android:layout_centerHorizontal="true"
-            android:focusableInTouchMode="false"
-            android:longClickable="true"
-            android:paddingTop="50dp"
-            android:singleLine="true"
-            android:text="ProfileName" />
+            android:orientation="vertical">
+            <!--All those bastard belong to me you can call me their grand parent-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!-- I am the background file with name of profile_background.png if you hate me you can replace me with new design-->
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:scaleType="fitXY"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/profile_background" />
+                <!-- I am the girl in your desing if you have some other girl in your database then just change me -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    android:src="@drawable/user_profile_picture"
+                    android:scaleType="centerCrop"
+                    app:border_color="@color/white"
+                    app:srcCompat="@drawable/user_profile_picture" />
+                <!-- I am father of all those button they are my child if you need to tweaks them you should not deal with me just remember they belong to me -->
+                <!-- And another thing they are in vertical order aka same as list-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="30dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView2">
+                    <!-- I am constraintlayout i am being used to create  My review button you can call me view group for My Review button-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/profileReview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/white_background_btn"
+                        android:clickable="true"
+                        android:elevation="3dp"
+                        android:onClick="openReview"
+                        tools:layout_editor_absoluteX="-9dp"
+                        tools:layout_editor_absoluteY="306dp"
+                        android:focusable="true">
+                        <!-- I am ImageView and i am holding resources like rating.png and it is being kept in white_background_btn which is Constraintlayout for My Review -->
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/rating" />
+                        <!-- I am TextView and i am writting text Personal My reviews out in white_background_btn which is Constraintlayout for My Review -->
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="My Reviews"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/imageView3"
+                            app:layout_constraintStart_toEndOf="@id/imageView3"
+                            app:layout_constraintTop_toTopOf="@id/imageView3" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:src="@drawable/ic_baseline_done_24"
-            android:layout_toRightOf="@id/profileName"
-            android:layout_below="@id/profileImage"
-            android:layout_marginStart="30dp"/>
-    </RelativeLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- I am constraintlayout i am being used to create Personal Information button you can call me view group for Personal Information button-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/white_background_btn"
+                        android:clickable="true"
+                        android:elevation="3dp"
+                        android:onClick="openInfo"
+                        tools:layout_editor_absoluteX="-9dp"
+                        tools:layout_editor_absoluteY="306dp"
+                        android:focusable="true">
+                        <!-- I am ImageView and i am holding resources like personal_info.png and it is being kept in white_background_btn which is Constraintlayout for Personal Information -->
+                        <ImageView
+                            android:id="@+id/imageView5"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/personal_info" />
+                        <!-- I am TextView and i am writting text Personal Information out in white_background_btn which is Constraintlayout for Personal Information -->
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="Personal Information"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/imageView5"
+                            app:layout_constraintStart_toEndOf="@id/imageView5"
+                            app:layout_constraintTop_toTopOf="@id/imageView5" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/temp"
-        android:layout_below="@id/userLayout"
-        android:paddingTop="30dp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- I am constraintlayout i am being used to create history button you can call me view group for History button-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/white_background_btn"
+                        android:clickable="true"
+                        android:elevation="3dp"
+                        android:onClick="openHistory"
+                        tools:layout_editor_absoluteX="-9dp"
+                        tools:layout_editor_absoluteY="306dp"
+                        android:focusable="true">
+                        <!-- I am ImageView and i am holding resources like history.png and it is being kept in white_background_btn which is Constraintlayout for History -->
+                        <ImageView
+                            android:id="@+id/imageView7"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/history" />
+                        <!-- I am TextView and i am writting text History out in white_background_btn which is Constraintlayout for History -->
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="History"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/imageView7"
+                            app:layout_constraintStart_toEndOf="@id/imageView7"
+                            app:layout_constraintTop_toTopOf="@id/imageView7" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- I am constraintlayout i am being used to create logout button you can call me view group for logout button-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:onClick="logout"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/white_background_btn"
+                        android:elevation="3dp"
+                        tools:layout_editor_absoluteX="-9dp"
+                        tools:layout_editor_absoluteY="306dp">
+                        <!-- I am ImageView and i am holding resources like logout.png and it is being kept in white_background_btn which is Constraintlayout for logout -->
+                        <ImageView
+                            android:id="@+id/imageView9"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/logout" />
+                        <!-- I am TextView and i am writting text Logout out in white_background_btn which is Constraintlayout for logout -->
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="Logout"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/imageView9"
+                            app:layout_constraintStart_toEndOf="@id/imageView9"
+                            app:layout_constraintTop_toTopOf="@id/imageView9" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"
-        android:visibility="invisible" />
+                    <!-- Tweak me if button is not working or not matching your screeen -->
+                    <!-- Adjust margin for gap between top image button and screen size -->
+                    <Button
+                        android:id="@+id/back_to_main_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="90dp"
+                        android:layout_marginBottom="11dp"
+                        android:background="@drawable/rounded_corners"
+                        android:text="Back to Main Menu"
+                        android:textColor="#000000"
+                        android:textSize="18sp" />
 
-</RelativeLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

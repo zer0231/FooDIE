@@ -16,6 +16,9 @@ public class RecipeBrief {
         this.link = link;
     }
 
+    public RecipeBrief() {
+    }
+
     public String getId() {
         return id;
     }
