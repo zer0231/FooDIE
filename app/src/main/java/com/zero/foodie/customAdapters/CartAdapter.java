@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -77,6 +78,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
             }
         });
 
+
         holder.sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +104,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                 }
             }
         });
+        holder.singleInstance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Long click to remove", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.singleInstance.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/cart/" + currentItem.getProductID()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isComplete()) {
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
+                return true;
+            }
+        });
 
         Glide.with(context).load(currentItem.getImage()).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.temp_image).into(holder.cartImage);
 
@@ -116,11 +138,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
         TextView cartName, cartPrice, cartQuantity;
         ImageView cartImage;
         ImageButton add, sub;
+        ConstraintLayout singleInstance;
 
         public CartHolder(@NonNull View itemView) {
             super(itemView);
             add = itemView.findViewById(R.id.addCartItem);
             sub = itemView.findViewById(R.id.subCartItem);
+            singleInstance = itemView.findViewById(R.id.singleCartInstance);
             cartName = itemView.findViewById(R.id.cartProductName);
             cartPrice = itemView.findViewById(R.id.cartProductPrice);
             cartQuantity = itemView.findViewById(R.id.cartQuantity);

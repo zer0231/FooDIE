@@ -45,6 +45,9 @@ public class HomeFragment extends Fragment {
     CategoryAdapter categoryAdapter;
     String category;
 
+    public HomeFragment() {
+    }
+
     public HomeFragment(Context context, String category) {
         this.category = category;
         this.context = context;

@@ -1,18 +1,17 @@
 package com.zero.foodie.customFragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +37,9 @@ public class CartFragment extends Fragment {
     private static ArrayList<CartModel> cartItem;
     RecyclerView recyclerView;
     Button checkOut;
+    ScrollView scrollView;
     CartAdapter cartAdapter;
+    TextView noItem;
 
     public CartFragment(Context context) {
         this.context = context;
@@ -49,7 +50,8 @@ public class CartFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Toast.makeText(context, "Refresh", Toast.LENGTH_SHORT).show();
         View v = inflater.inflate(R.layout.fragment_cart, parent, false);
-
+        scrollView = v.findViewById(R.id.scrollView3);
+        noItem = v.findViewById(R.id.cart_message);
         recyclerView = v.findViewById(R.id.cartRecyclerViewer);
         recyclerView.setHasFixedSize(true);
         checkOut = v.findViewById(R.id.checkoutButton);
@@ -99,6 +101,10 @@ public class CartFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 cartItem.clear();
+                if (!snapshot.hasChildren()) {
+                    noItem.setVisibility(View.VISIBLE);
+                    scrollView.setVisibility(View.GONE);
+                }
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     CartModel temp = dataSnapshot.getValue(CartModel.class);
                     cartItem.add(temp);
