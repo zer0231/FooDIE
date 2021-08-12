@@ -21,6 +21,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="golden">#DCCD4E</color>
 
 
     <color name ="grey_lighten_5">#FAFAFA</color>

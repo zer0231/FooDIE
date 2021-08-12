@@ -1,6 +1,7 @@
 package com.zero.foodie.customAdapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.zero.foodie.MainActivity;
+import com.zero.foodie.FoodActivity;
 import com.zero.foodie.R;
 import com.zero.foodie.model.CartModel;
 import com.zero.foodie.model.ProductDetail;
@@ -114,7 +116,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context.getApplicationContext(), FoodActivity.class);
+                i.putExtra("foodID", currentItem.getProId());
+                context.startActivity(i);
+            }
+        });
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
 
+                return true;
+            }
+        });
         FirebaseDatabase.getInstance().getReference().child("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/cart/" + currentItem.getProId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -144,9 +160,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             }
         });
 
-        Glide.with(context.getApplicationContext()).load(currentItem.getProImageLink()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).placeholder(R.drawable.temp_image).into(holder.poster);
+        Glide.with(context.getApplicationContext()).load(currentItem.getProImageLink()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.temp_image).into(holder.poster);
         holder.name.setText(currentItem.getProName());
-        holder.price.setText("Rs. "+currentItem.getProPrice());
+        holder.price.setText("Rs. " + currentItem.getProPrice());
         holder.addToFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +196,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                     try {
                         FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/cart/" + currentItem.getProId()).setValue(new CartModel(currentItem.getProId(), currentItem.getProName(), 1, currentItem.getProImageLink(), currentItem.getProPrice(), currentItem.getProPrice(), FirebaseAuth.getInstance().getCurrentUser().getUid()));
                         currentItem.setInCart(true);
-                        Toast.makeText(context, "Added from your cart" + currentItem.getProId(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context, "Added from your cart" + currentItem.getProId(), Toast.LENGTH_SHORT).show();
                         holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_done_24));
 
                     } catch (Exception e) {
@@ -218,11 +234,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public TextView name, price;
         public Button visit;
         public CardView cardView;
+        public RatingBar ratingBar;
         public ImageButton addToCart, addToFavourite;
         public ImageView poster;
 
         public ProductHolder(@NonNull View itemView) {
             super(itemView);
+            ratingBar = itemView.findViewById(R.id.ratingbar);
             cardView = itemView.findViewById(R.id.productCardView);
             name = itemView.findViewById(R.id.proName);
             price = itemView.findViewById(R.id.proPice);

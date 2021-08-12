@@ -38,7 +38,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView"
-                    android:src="@drawable/user_profile_picture"
+                    android:src="@drawable/profile_pic"
                     android:scaleType="centerCrop"
                     app:border_color="@color/white"
                     app:srcCompat="@drawable/user_profile_picture" />

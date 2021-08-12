@@ -1,4 +1,4 @@
-package com.zero.foodie.customAdapters;
+            package com.zero.foodie.customAdapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;

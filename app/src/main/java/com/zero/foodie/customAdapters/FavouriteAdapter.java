@@ -7,9 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.zero.foodie.R;
 import com.zero.foodie.model.CartModel;
 
@@ -47,9 +49,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         FirebaseDatabase.getInstance().getReference("products/" + currentID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                temp = new CartModel(currentID, snapshot.child("name").getValue(String.class), 1, snapshot.child("imageLink").getValue(String.class), snapshot.child("price").getValue(String.class), snapshot.child("price").getValue(String.class),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                temp = new CartModel(currentID, snapshot.child("name").getValue(String.class), 1, snapshot.child("imageLink").getValue(String.class), snapshot.child("price").getValue(String.class), snapshot.child("price").getValue(String.class), FirebaseAuth.getInstance().getCurrentUser().getUid());
                 holder.name.setText(snapshot.child("name").getValue(String.class));
-                holder.price.setText(snapshot.child("price").getValue(String.class));
+                holder.price.setText("Rs " + snapshot.child("price").getValue(String.class));
                 Glide.with(context).load(snapshot.child("imageLink").getValue(String.class)).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.temp_image).into(holder.poster);
             }
 
@@ -63,7 +65,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
             @Override
             public void onClick(View v) {
                 FirebaseDatabase.getInstance().getReference().child("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/cart/" + currentID).setValue(temp);
-                Toast.makeText(context, "Added an Instance", Toast.LENGTH_SHORT).show();
+                FancyToast.makeText(context.getApplicationContext(), "Added to your cart", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+
+
             }
         });
         holder.removeFromFavourite.setOnClickListener(new View.OnClickListener() {
@@ -72,8 +76,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
                 FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/favourites/" + currentID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        FancyToast.makeText(context.getApplicationContext(), "Removed", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
                         productId.remove(position);
                         notifyDataSetChanged();
+
                     }
                 });
             }

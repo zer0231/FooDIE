@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,7 @@ import com.zero.foodie.model.ProductDetail;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
+    TextView errorTextView;
     FirebaseDatabase firebaseDatabase;
     Context context;
     ProductAdapter productAdapter;
@@ -44,6 +48,10 @@ public class HomeFragment extends Fragment {
     SharedPreferences.Editor editor;
     CategoryAdapter categoryAdapter;
     String category;
+    ProgressBar circularProgressIndicator;
+
+    public HomeFragment() {
+    }
 
     public HomeFragment(Context context, String category) {
         this.category = category;
@@ -66,10 +74,12 @@ public class HomeFragment extends Fragment {
                 });
             }
         });
+        circularProgressIndicator = v.findViewById(R.id.progress_circular_home);
         circularRecyclerView = v.findViewById(R.id.categoryRecyclerView);
         circularRecyclerView.setHasFixedSize(true);
         recyclerView = v.findViewById(R.id.orgRecycleView);
         recyclerView.setHasFixedSize(true);
+        errorTextView = v.findViewById(R.id.ErrorTxtView);
         recyclerView.setItemAnimator(null);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         editor = preferences.edit();
@@ -156,6 +166,8 @@ public class HomeFragment extends Fragment {
                     }
                     productAdapter = new ProductAdapter(context, productList);
                     recyclerView.setAdapter(productAdapter);
+                    circularProgressIndicator.setVisibility(View.GONE);
+                    errorTextView.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -169,14 +181,25 @@ public class HomeFragment extends Fragment {
             ref.orderByChild("status").equalTo("available").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                     ArrayList<ProductDetail> productList = new ArrayList<ProductDetail>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (dataSnapshot.child("itemType").getValue(String.class).equals(category)) {
-                            productList.add(new ProductDetail(dataSnapshot.child("name").getValue(String.class), dataSnapshot.child("imageLink").getValue(String.class), dataSnapshot.child("itemType").getValue(String.class), dataSnapshot.child("briefDescription").getValue(String.class), dataSnapshot.child("price").getValue(String.class), dataSnapshot.getKey()));
+
+                      if (dataSnapshot.child("itemType").getValue(String.class).equals(category)) {
+                             productList.add(new ProductDetail(dataSnapshot.child("name").getValue(String.class), dataSnapshot.child("imageLink").getValue(String.class), dataSnapshot.child("itemType").getValue(String.class), dataSnapshot.child("briefDescription").getValue(String.class), dataSnapshot.child("price").getValue(String.class), dataSnapshot.getKey()));
                         }//productList.clear();
+                    }
+                    if(productList.isEmpty())
+                    {
+                        errorTextView.setText("Sorry this category is empty");
+                    }
+                    else{
+                        circularProgressIndicator.setVisibility(View.GONE);
+                        errorTextView.setVisibility(View.GONE);
                     }
                     productAdapter = new ProductAdapter(context, productList);
                     recyclerView.setAdapter(productAdapter);
+
                 }
 
                 @Override

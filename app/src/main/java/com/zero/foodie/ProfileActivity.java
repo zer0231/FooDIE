@@ -2,42 +2,25 @@ package com.zero.foodie;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.zero.foodie.customAdapters.HistoryAdapter;
-import com.zero.foodie.model.OrderHistoryModel;
-import com.zero.foodie.model.CartModel;
-
-import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class ProfileActivity extends AppCompatActivity {
-Button backButton;
+    Button backButton, history_close;
+
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        mAuth = FirebaseAuth.getInstance();
         backButton = findViewById(R.id.back_to_main_menu);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,25 +33,33 @@ Button backButton;
     }
 
 
-
     @Override
     public void onBackPressed() {
-      finish();
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        finish();
     }
 
     public void openReview(View view) {
-        Toast.makeText(this, "Reviews", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(ProfileActivity.this, ReviewActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     public void openInfo(View view) {
-        Toast.makeText(this, "Information", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(ProfileActivity.this,PendingOrderActivity.class));
+        FancyToast.makeText(ProfileActivity.this, "Cannot open at the moment", FancyToast.LENGTH_LONG, FancyToast.CONFUSING, false).show();
+
     }
 
     public void openHistory(View view) {
-        Toast.makeText(this, "History", Toast.LENGTH_SHORT).show();
+        //   getData();
+
+        startActivity(new Intent(ProfileActivity.this, HistoryActivity.class));
+
     }
+
 
     public void logout(View view) {
         Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+        mAuth.signOut();
+        finish();
     }
 }
