@@ -1,5 +1,6 @@
 package com.zero.foodie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +33,12 @@ public class RecipeActivity extends AppCompatActivity {
     ArrayList<RecipeBrief> recipeItem;
     RecipePagerAdapter recipeAdapter;
     SearchView recipeSearch;
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(RecipeActivity.this, MainActivity.class));
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

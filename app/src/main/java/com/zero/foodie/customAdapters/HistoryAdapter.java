@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.florent37.expansionpanel.ExpansionLayout;
+import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection;
 import com.zero.foodie.R;
 import com.zero.foodie.model.OrderHistoryModel;
 
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryHolder> {
     Context context;
     ArrayList<OrderHistoryModel> orderList;
+
 
     public HistoryAdapter(Context context, ArrayList<OrderHistoryModel> orderList) {
         this.context = context;
@@ -33,6 +36,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryH
 
     @Override
     public void onBindViewHolder(@NonNull HistoryHolder holder, int position) {
+
         OrderHistoryModel currentOrder = orderList.get(position);
         int i;
         ArrayList<String> names = currentOrder.getProductList();
@@ -47,8 +51,27 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryH
         for (i = 0; i < quantity.size(); i++) {
             holder.historyQuantity.append("\n" + quantity.get(i));
         }
-        holder.historyDate.setText(currentOrder.getDate());
-        holder.historyPrice.append("\n\nTotal:"+currentOrder.getTotal());
+        holder.historyDate.setText(dateDecoder(currentOrder.getDate()));
+        holder.historyPrice.append("\n\nTotal:" + currentOrder.getTotal());
+        holder.historyPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, dateDecoder(currentOrder.getDate()), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public String dateDecoder(String id) {
+        String decodedTxt;
+        String txt = id.substring(1);
+        String year = txt.substring(0, 4);
+        String month = txt.substring(4, 6);
+        String day = txt.substring(6, 8);
+        String hour = txt.substring(8, 10);
+        String minute = txt.substring(10, 12);
+        String second = txt.substring(12, txt.length());
+        decodedTxt = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+        return decodedTxt;
     }
 
     @Override
@@ -65,7 +88,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryH
             historyPrice = itemView.findViewById(R.id.historyPrice);
             historyQuantity = itemView.findViewById(R.id.historyQuantity);
             historyDate = itemView.findViewById(R.id.historyDate);
-
 
         }
     }

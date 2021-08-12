@@ -119,13 +119,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Clicked once !!!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(context.getApplicationContext(), FoodActivity.class);
+                i.putExtra("foodID", currentItem.getProId());
+                context.startActivity(i);
             }
         });
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                context.startActivity(new Intent(context.getApplicationContext(), FoodActivity.class));
+
                 return true;
             }
         });
@@ -158,9 +160,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             }
         });
 
-        Glide.with(context.getApplicationContext()).load(currentItem.getProImageLink()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).placeholder(R.drawable.temp_image).into(holder.poster);
+        Glide.with(context.getApplicationContext()).load(currentItem.getProImageLink()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.temp_image).into(holder.poster);
         holder.name.setText(currentItem.getProName());
-        holder.price.setText("Rs. "+currentItem.getProPrice());
+        holder.price.setText("Rs. " + currentItem.getProPrice());
         holder.addToFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +196,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                     try {
                         FirebaseDatabase.getInstance().getReference().child("Users/" + finalUserID + "/cart/" + currentItem.getProId()).setValue(new CartModel(currentItem.getProId(), currentItem.getProName(), 1, currentItem.getProImageLink(), currentItem.getProPrice(), currentItem.getProPrice(), FirebaseAuth.getInstance().getCurrentUser().getUid()));
                         currentItem.setInCart(true);
-                        Toast.makeText(context, "Added from your cart" + currentItem.getProId(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context, "Added from your cart" + currentItem.getProId(), Toast.LENGTH_SHORT).show();
                         holder.addToCart.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_baseline_done_24));
 
                     } catch (Exception e) {

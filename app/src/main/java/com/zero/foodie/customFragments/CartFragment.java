@@ -34,12 +34,14 @@ import java.util.ArrayList;
 
 public class CartFragment extends Fragment {
     private Context context;
+    final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private static ArrayList<CartModel> cartItem;
     RecyclerView recyclerView;
     Button checkOut;
     ScrollView scrollView;
+
     CartAdapter cartAdapter;
-    TextView noItem;
+    TextView noItem,cartTotal;
 
     public CartFragment(Context context) {
         this.context = context;
@@ -48,10 +50,11 @@ public class CartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(context, "Refresh", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(context, "Refresh", Toast.LENGTH_SHORT).show();
         View v = inflater.inflate(R.layout.fragment_cart, parent, false);
         scrollView = v.findViewById(R.id.scrollView3);
         noItem = v.findViewById(R.id.cart_message);
+        cartTotal = v.findViewById(R.id.cart_fragment_total);
         recyclerView = v.findViewById(R.id.cartRecyclerViewer);
         recyclerView.setHasFixedSize(true);
         checkOut = v.findViewById(R.id.checkoutButton);
@@ -59,6 +62,27 @@ public class CartFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(gridLayoutManager);
         getData();
+        FirebaseDatabase.getInstance().getReference("Users/"+userID+"/cart").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren())
+                {
+                    int finalTotal = 0;
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        String total = dataSnapshot.child("subTotal").getValue(String.class);
+                        int intTotal=Integer.parseInt(total);
+                        finalTotal = finalTotal + intTotal;
+
+                    }
+                    cartTotal.setText("Rs. "+finalTotal);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         checkOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +111,7 @@ public class CartFragment extends Fragment {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/cart").removeValue();
-                    new DatabaseQueryHandler().copy("Users/"+ FirebaseAuth.getInstance().getCurrentUser().getUid()+"/Waiting","pendingOrder/"+finalUniqueID);
+                    new DatabaseQueryHandler().copy("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/Waiting", "pendingOrder/" + finalUniqueID);
 
 //                FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/exactAddress").setValue(latitude+","+longitude);
                 }

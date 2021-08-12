@@ -29,6 +29,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shashank.sony.fancytoastlib.FancyToast;
+import com.zero.foodie.MainActivity;
 import com.zero.foodie.MapActivity;
 import com.zero.foodie.R;
 import com.zero.foodie.customFragments.CartFragment;
@@ -123,11 +125,14 @@ public class CheckoutAdapter extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (lan == "" || lon == "") {
-                    Toast.makeText(getContext(), "Please provide location", Toast.LENGTH_SHORT).show();
+                    FancyToast.makeText(getContext(),"Please enable gps service", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
                 } else if (phone == "") {
                     phoneNumber.requestFocus();
                 } else {
                     CartFragment.makeOrder(finalUniqueID1, lan, lon);
+                    FancyToast.makeText(getContext(), "We have received your order Successfully", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
+
                     dismiss();
                 }
 

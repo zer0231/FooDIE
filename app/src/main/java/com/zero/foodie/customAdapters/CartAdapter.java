@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.shashank.sony.fancytoastlib.FancyToast;
+import com.zero.foodie.LoginAndSignupActivity;
 import com.zero.foodie.MainActivity;
 import com.zero.foodie.R;
 import com.zero.foodie.model.CartModel;
@@ -54,7 +56,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
     public void onBindViewHolder(@NonNull CartHolder holder, int position) {
         CartModel currentItem = cartList.get(position);
         holder.cartName.setText(currentItem.getPrductName());
-        holder.cartPrice.setText(currentItem.getSubTotal());
+        holder.cartPrice.setText(currentItem.getPrice());
+        holder.TotalCartPrice.setText(currentItem.getSubTotal());
         final String[] CurrentQuantity = {String.valueOf(currentItem.getQuantity())};
         holder.cartQuantity.setText(CurrentQuantity[0]);
         holder.add.setOnClickListener(new View.OnClickListener() {
@@ -100,14 +103,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                     ((MainActivity) v.getContext()).cartBadge();
 
                 } else {
-                    Toast.makeText(context, "To remove press remove button", Toast.LENGTH_SHORT).show();
+                    FancyToast.makeText(context,"To remove long click", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
                 }
             }
         });
         holder.singleInstance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Long click to remove", Toast.LENGTH_SHORT).show();
+                FancyToast.makeText(context,"Long click to remove", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
             }
         });
         holder.singleInstance.setOnLongClickListener(new View.OnLongClickListener() {
@@ -118,6 +121,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isComplete()) {
                             notifyDataSetChanged();
+                            FancyToast.makeText(context,"Removed "+currentItem.getPrductName(), FancyToast.LENGTH_SHORT, FancyToast.WARNING, false).show();
+
                         }
                     }
                 });
@@ -135,7 +140,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
     }
 
     public class CartHolder extends RecyclerView.ViewHolder {
-        TextView cartName, cartPrice, cartQuantity;
+        TextView cartName, cartPrice, cartQuantity,TotalCartPrice;
         ImageView cartImage;
         ImageButton add, sub;
         ConstraintLayout singleInstance;
@@ -146,6 +151,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
             sub = itemView.findViewById(R.id.subCartItem);
             singleInstance = itemView.findViewById(R.id.singleCartInstance);
             cartName = itemView.findViewById(R.id.cartProductName);
+            TotalCartPrice = itemView.findViewById(R.id.total_item_price);
             cartPrice = itemView.findViewById(R.id.cartProductPrice);
             cartQuantity = itemView.findViewById(R.id.cartQuantity);
             cartImage = itemView.findViewById(R.id.cartProductImage);
